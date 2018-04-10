@@ -1,9 +1,8 @@
 const webpack = require('webpack'),
 	path = require('path'),
 	HtmlWebpackPlugin = require('html-webpack-plugin'),
-	ExtractTextPlugin = require('extract-text-webpack-plugin'),
 	package = require('./package.json'),
-	StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
+	MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const SRC_DIR = path.resolve(__dirname, 'src');
 const OUTPUT_DIR = path.resolve(__dirname, 'dist');
@@ -11,10 +10,10 @@ const OUTPUT_DIR = path.resolve(__dirname, 'dist');
 const defaultInclude = [SRC_DIR];
 
 module.exports = {
+	mode: 'production',
 	target: 'web',
 	entry: {
-		app: SRC_DIR + '/index.js',
-		vendor: Object.keys(package.dependencies)
+		app: SRC_DIR + '/index.js'
 	},
 	output: {
 		path: OUTPUT_DIR,
@@ -25,10 +24,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.css$/,
-				use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
-					use: 'css-loader'
-				}),
+				use: [MiniCssExtractPlugin.loader, 'css-loader'],
 				include: defaultInclude
 			},
 			{
@@ -52,41 +48,28 @@ module.exports = {
 			}
 		]
 	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendors',
+					chunks: 'all'
+				}
+			}
+		}
+	},
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify('production')
 		}),
 		new webpack.optimize.ModuleConcatenationPlugin(),
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor',
-			filename: 'vendor.[chunkhash].js',
-			minChunks(module) {
-				return module.context && module.context.indexOf('node_modules') >= 0;
-			}
-		}),
-		new webpack.optimize.UglifyJsPlugin({
-			compress: {
-				warnings: false,
-				screw_ie8: true,
-				conditionals: true,
-				unused: true,
-				comparisons: true,
-				sequences: true,
-				dead_code: true,
-				evaluate: true,
-				if_return: true,
-				join_vars: true
-			},
-			output: {
-				comments: false
-			}
-		}),
 		new HtmlWebpackPlugin({
 			title: 'Validar Check-in',
 			filename: './index.html',
 			favicon: './src/assets/favicon.ico',
 			template: './src/index.html',
-			chunks: ['vendor', 'app'],
+			chunks: ['vendors', 'app'],
 			minify: {
 				collapseWhitespace: true,
 				collapseInlineTagWhitespace: true,
@@ -94,12 +77,9 @@ module.exports = {
 				removeRedundantAttributes: true
 			}
 		}),
-		new ExtractTextPlugin({
-			filename: '[name].[contenthash].css',
-			allChunks: true
-		}),
-		new StyleExtHtmlWebpackPlugin({
-			minify: true
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: '[id].css'
 		})
 	],
 	stats: {

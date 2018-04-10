@@ -1,7 +1,6 @@
 const webpack = require('webpack'),
 	path = require('path'),
-	HtmlWebpackPlugin = require('html-webpack-plugin'),
-	package = require('./package.json');
+	HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const SRC_DIR = path.resolve(__dirname, 'src');
 const OUTPUT_DIR = path.resolve(__dirname, 'dist');
@@ -12,12 +11,10 @@ module.exports = {
 	mode: 'development',
 	target: 'web',
 	entry: {
-		app: path.resolve(SRC_DIR, 'index.js'),
-		vendor: Object.keys(package.dependencies)
+		app: path.resolve(SRC_DIR, 'index.js')
 	},
 	output: {
 		path: OUTPUT_DIR,
-		publicPath: '/',
 		filename: '[name].bundle.js'
 	},
 	module: {
@@ -46,21 +43,31 @@ module.exports = {
 			}
 		]
 	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendors',
+					chunks: 'all'
+				}
+			}
+		}
+	},
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify('development')
 		}),
 		new HtmlWebpackPlugin({
 			title: 'Validar Check-in',
-			filename: './index.html',
+			filename: 'index.html',
 			favicon: './src/assets/favicon.ico',
 			template: './src/index.html',
-			chunks: ['vendor', 'app']
+			chunks: ['vendors', 'app']
 		})
 	],
 	devtool: 'cheap-source-map',
 	devServer: {
-		contentBase: OUTPUT_DIR,
 		stats: {
 			colors: true,
 			chunks: false,
