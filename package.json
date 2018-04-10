@@ -1,0 +1,9 @@
+{
+  "name": "standard-checkin",
+  "version": "1.0.0",
+  "description": "A standard registration check-in application for managing event data.",
+  "main": "index.js",
+  "repository": "https://github.com/C-Rodg/Standard-Check-in.git",
+  "author": "C-Rodg",
+  "license": "MIT"
+}
