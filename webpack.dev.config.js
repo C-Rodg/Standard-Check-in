@@ -15,6 +15,7 @@ module.exports = {
 	},
 	output: {
 		path: OUTPUT_DIR,
+		publicPath: '/',
 		filename: '[name].bundle.js'
 	},
 	module: {
@@ -43,17 +44,6 @@ module.exports = {
 			}
 		]
 	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				commons: {
-					test: /[\\/]node_modules[\\/]/,
-					name: 'vendors',
-					chunks: 'all'
-				}
-			}
-		}
-	},
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify('development')
@@ -66,6 +56,17 @@ module.exports = {
 			chunks: ['vendors', 'app']
 		})
 	],
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendors',
+					chunks: 'all'
+				}
+			}
+		}
+	},
 	devtool: 'cheap-source-map',
 	devServer: {
 		stats: {
