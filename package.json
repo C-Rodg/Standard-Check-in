@@ -1,15 +1,13 @@
 {
 	"name": "standard-checkin",
 	"version": "1.0.0",
-	"description":
-		"A standard registration check-in application for managing event data.",
+	"description": "A standard registration check-in application for managing event data.",
 	"main": "index.js",
 	"repository": "https://github.com/C-Rodg/Standard-Check-in.git",
 	"author": "C-Rodg",
 	"license": "MIT",
 	"scripts": {
-		"dev":
-			"webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
+		"dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
 		"dev-build": "rimraf dist && webpack --config webpack.dev.config.js",
 		"build": "rimraf dist && webpack --config webpack.build.config.js",
 		"watch": "rimraf dist && webpack --config webpack.build.config.js --watch"

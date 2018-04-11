@@ -1,7 +1,6 @@
 const webpack = require('webpack'),
 	path = require('path'),
 	HtmlWebpackPlugin = require('html-webpack-plugin'),
-	package = require('./package.json'),
 	MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const SRC_DIR = path.resolve(__dirname, 'src');
